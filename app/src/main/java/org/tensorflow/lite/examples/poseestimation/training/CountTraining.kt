@@ -1,8 +1,9 @@
 package org.tensorflow.lite.examples.poseestimation.training
 
+import android.content.Context
 import org.tensorflow.lite.examples.poseestimation.data.Person
 
-abstract class CountTraining(name: String) : Training(name) {
+abstract class CountTraining(name: String, context: Context) : Training(name, context) {
 
     private var count: Int = 0
     private var counting: Boolean = false

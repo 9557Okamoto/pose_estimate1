@@ -62,7 +62,7 @@ class CameraSource(
     private var yuvConverter: YuvToRgbConverter = YuvToRgbConverter(surfaceView.context)
     private lateinit var imageBitmap: Bitmap
 
-    var training: Training = Plank()
+    var training: Training? = null
 
     /** Frame count that have been processed so far in an one second interval to calculate FPS. */
     private var fpsTimer: Timer? = null
@@ -278,10 +278,12 @@ class CameraSource(
 //        listener?.yValue(persons[0].keyPoints[0].coordinate.y)
 //        listener?.nameValue(persons[0].keyPoints[0].bodyPart)
 
-        training.addPerson(persons[0])
+        if(training != null){
+            training!!.addPerson(persons[0])
+            listener?.CountListener(training!!.getResult())
+            listener?.CalorieListener(training!!.getKcal().toString())
+        }
 
-        listener?.CountListener(training.getResult())
-        listener?.CalorieListener(training.getKcal().toString())
 
         visualize(persons, bitmap)
     }

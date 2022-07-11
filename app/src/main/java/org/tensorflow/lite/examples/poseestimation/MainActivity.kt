@@ -99,12 +99,12 @@ class MainActivity : AppCompatActivity() {
 
         PlankBtn.setOnClickListener {
            if(cameraSource != null){
-                cameraSource?.training = Plank()
+                cameraSource?.training = Plank(this)
             }
         }
         SquatBtn.setOnClickListener {
             if(cameraSource != null){
-        cameraSource?.training = Squat()
+        cameraSource?.training = Squat(this)
             }
         }
 

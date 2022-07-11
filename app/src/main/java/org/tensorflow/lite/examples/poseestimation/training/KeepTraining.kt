@@ -1,11 +1,12 @@
 package org.tensorflow.lite.examples.poseestimation.training
 
+import android.content.Context
 import org.tensorflow.lite.examples.poseestimation.camera.CameraSource
 import org.tensorflow.lite.examples.poseestimation.data.Person
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-abstract class KeepTraining(name: String) : Training(name) {
+abstract class KeepTraining(name: String, context: Context) : Training(name, context) {
 
     private var start: LocalDateTime? = null
     private var finish: LocalDateTime? = null

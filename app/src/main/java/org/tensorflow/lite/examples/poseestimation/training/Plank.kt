@@ -1,9 +1,10 @@
 package org.tensorflow.lite.examples.poseestimation.training
 
+import android.content.Context
 import org.tensorflow.lite.examples.poseestimation.data.Person
 import kotlin.math.acos
 
-class Plank: KeepTraining("Plank") {
+class Plank(context: Context): KeepTraining("Plank", context) {
 
     private var count1: Int = 0
     // カウントする条件

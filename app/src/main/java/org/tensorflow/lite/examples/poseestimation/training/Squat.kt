@@ -1,9 +1,10 @@
 package org.tensorflow.lite.examples.poseestimation.training
 
+import android.content.Context
 import org.tensorflow.lite.examples.poseestimation.data.Person
 import kotlin.math.*
 
-class Squat: CountTraining("Squat") {
+class Squat(context: Context): CountTraining("Squat", context) {
 
     private var point1: Int = 0
     private var point2: Int = 0
