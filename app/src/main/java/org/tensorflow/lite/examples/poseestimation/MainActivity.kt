@@ -17,17 +17,23 @@ limitations under the License.
 package org.tensorflow.lite.examples.poseestimation
 
 import android.Manifest
+import android.Manifest.permission.RECORD_AUDIO
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Process
+import android.speech.RecognitionListener
+import android.speech.RecognizerIntent
+import android.speech.SpeechRecognizer
 import android.view.SurfaceView
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
@@ -43,7 +49,12 @@ import org.tensorflow.lite.examples.poseestimation.training.Squat
 class MainActivity : AppCompatActivity() {
     companion object {
         private const val FRAGMENT_DIALOG = "dialog"
+        private const val PERMISSIONS_RECORD_AUDIO = 1000
     }
+    private var speechRecognizer : SpeechRecognizer? = null
+    private lateinit var recognize_text_view: TextView
+    private lateinit var recognize_start_button: Button
+    private lateinit var recognize_stop_button: Button
 
     private lateinit var surfaceView: SurfaceView
 
@@ -83,6 +94,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        recognize_text_view= findViewById(R.id.recognize_text_view)
+        recognize_start_button = findViewById(R.id.recognize_start_button)
+        recognize_stop_button = findViewById(R.id.recognize_stop_button)
         // keep screen on while app is running
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         tvScore = findViewById(R.id.tvScore)
@@ -111,6 +125,41 @@ class MainActivity : AppCompatActivity() {
         if (!isCameraPermissionGranted()) {
             requestPermission()
         }
+
+        val granted = ContextCompat.checkSelfPermission(this, RECORD_AUDIO)
+        if (granted != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(RECORD_AUDIO), PERMISSIONS_RECORD_AUDIO)
+        }
+
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(applicationContext)
+        speechRecognizer?.setRecognitionListener(createRecognitionListenerStringStream { recognize_text_view.text = it })
+
+        //recognize_start_button.setOnClickListener { speechRecognizer?.startListening(Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)) }
+        speechRecognizer?.startListening(Intent(RecognizerIntent.ACTION_VOICE_SEARCH_HANDS_FREE))
+        // setOnclickListner でクリック動作を登録し、クリックで音声入力が停止するようにする
+        recognize_stop_button.setOnClickListener { speechRecognizer?.stopListening() }
+    }
+
+    private fun createRecognitionListenerStringStream(onResult : (String)-> Unit) : RecognitionListener {
+        return object : RecognitionListener {
+            override fun onRmsChanged(rmsdB: Float) { /** 今回は特に利用しない */ }
+            override fun onReadyForSpeech(params: Bundle) { onResult("onReadyForSpeech") }
+            override fun onBufferReceived(buffer: ByteArray) { onResult("onBufferReceived") }
+            override fun onPartialResults(partialResults: Bundle) { onResult("onPartialResults") }
+            override fun onEvent(eventType: Int, params: Bundle) { onResult("onEvent") }
+            override fun onBeginningOfSpeech() { onResult("onBeginningOfSpeech") }
+            override fun onEndOfSpeech() { onResult("onEndOfSpeech") }
+            override fun onError(error: Int) { onResult("onError") }
+            override fun onResults(results: Bundle) {
+                val stringArray = results.getStringArrayList(android.speech.SpeechRecognizer.RESULTS_RECOGNITION);
+                onResult("onResults " + stringArray.toString())
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        speechRecognizer?.destroy()
     }
 
     override fun onStart() {
