@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity() {
         //recognize_start_button.setOnClickListener { speechRecognizer?.startListening(Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)) }
         speechRecognizer?.startListening(Intent(RecognizerIntent.ACTION_VOICE_SEARCH_HANDS_FREE))
         // setOnclickListner でクリック動作を登録し、クリックで音声入力が停止するようにする
-        recognize_stop_button.setOnClickListener { speechRecognizer?.stopListening() }
+        //recognize_stop_button.setOnClickListener { speechRecognizer?.stopListening() }
     }
 
     private fun createRecognitionListenerStringStream(onResult : (String)-> Unit) : RecognitionListener {
@@ -153,6 +153,7 @@ class MainActivity : AppCompatActivity() {
             override fun onResults(results: Bundle) {
                 val stringArray = results.getStringArrayList(android.speech.SpeechRecognizer.RESULTS_RECOGNITION);
                 onResult("onResults " + stringArray.toString())
+                speechRecognizer?.startListening(Intent(RecognizerIntent.ACTION_VOICE_SEARCH_HANDS_FREE))
             }
         }
     }
