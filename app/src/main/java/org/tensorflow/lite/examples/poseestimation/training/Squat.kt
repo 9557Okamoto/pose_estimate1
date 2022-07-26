@@ -61,9 +61,7 @@ class Squat(context: Context): CountTraining("Squat", context) {
         rad2 = acos(cos2)
         deg2 = Math.toDegrees(rad2.toDouble()).toFloat()
 
-        println(deg)
-        println(deg2)
-        return deg<=70 && deg2>70
+        return deg<=90 && deg2<=90
     }
 
     // 足が伸びてるか
@@ -118,7 +116,7 @@ class Squat(context: Context): CountTraining("Squat", context) {
         rad2 = acos(cos2)
         deg2 = Math.toDegrees(rad2.toDouble()).toFloat()
 
-        return deg >= 170 && deg2>=170
+        return deg >= 160 && deg2 >= 160
     }
 
     // 膝が前に出てないか等
@@ -184,7 +182,7 @@ class Squat(context: Context): CountTraining("Squat", context) {
         rad2 = acos(cos2)
         deg2 = Math.toDegrees(rad2.toDouble()).toFloat()
 
-        if(deg <= 70 && deg2 > 70){
+        if(deg <= 80 && deg2 > 80){
             point1 = 1
         }
         if(deg >= 160 && deg2 < 160){
@@ -192,15 +190,15 @@ class Squat(context: Context): CountTraining("Squat", context) {
             count++
         }
         if(deg >= 160 && deg2 < 160 && point1 == 0 && deg2 != 0.0f){
-            message =  "膝をもっと曲げてください"
+            message = message3
         }
-        if(deg <= 70 && deg2 > 70 && point2 == 0 && deg2 != 0.0f && count != 0){
-            message =  "膝を伸ばし切ってください"
+        if(deg <= 80 && deg2 > 80 && point2 == 0 && deg2 != 0.0f && count != 0){
+            message = message4
         }
         if(deg >= 160 && deg2 < 160 && point1 != 0 && deg2 !=0.0f){
             point1 = 0
         }
-        if(deg <= 70 && deg2 > 70 && point2 != 0 && deg2 != 0.0f){
+        if(deg <= 80 && deg2 > 80 && point2 != 0 && deg2 != 0.0f){
             point2 = 0
         }
         return when (message) {

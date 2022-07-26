@@ -111,16 +111,17 @@ class MainActivity : AppCompatActivity() {
         SquatBtn = findViewById(R.id.SquatBtn)
         surfaceView = findViewById(R.id.surfaceView)
 
-        PlankBtn.setOnClickListener {
-           if(cameraSource != null){
-                cameraSource?.training = Plank(this)
-            }
-        }
-        SquatBtn.setOnClickListener {
-            if(cameraSource != null){
-        cameraSource?.training = Squat(this)
-            }
-        }
+//        PlankBtn.setOnClickListener {
+//           if(cameraSource != null){
+//                cameraSource?.training = Plank(this)
+//            }
+//        }
+//        SquatBtn.setOnClickListener {
+//            if(cameraSource != null){
+//                cameraSource?.training = Squat(this)
+//            }
+//        }
+
 
         if (!isCameraPermissionGranted()) {
             requestPermission()
@@ -132,8 +133,26 @@ class MainActivity : AppCompatActivity() {
         }
 
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(applicationContext)
-        speechRecognizer?.setRecognitionListener(createRecognitionListenerStringStream { recognize_text_view.text = it })
+        //speechRecognizer?.setRecognitionListener(createRecognitionListenerStringStream { recognize_text_view.text = it })
 
+        speechRecognizer?.setRecognitionListener(createRecognitionListenerStringStream {
+            if(it == "プランク開始"){
+                if(cameraSource != null){
+                    cameraSource?.training = Plank(this)
+                }
+            }
+            if(it == "スクワット開始"){
+                if(cameraSource != null){
+                    cameraSource?.training = Squat(this)
+                }
+            }
+            if(it == "終了"){
+                if(cameraSource != null){
+                    cameraSource?.training = null
+                }
+            }
+            recognize_text_view.text = it
+        })
         //recognize_start_button.setOnClickListener { speechRecognizer?.startListening(Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)) }
         speechRecognizer?.startListening(Intent(RecognizerIntent.ACTION_VOICE_SEARCH_HANDS_FREE))
         // setOnclickListner でクリック動作を登録し、クリックで音声入力が停止するようにする
@@ -149,10 +168,16 @@ class MainActivity : AppCompatActivity() {
             override fun onEvent(eventType: Int, params: Bundle) { onResult("onEvent") }
             override fun onBeginningOfSpeech() { onResult("onBeginningOfSpeech") }
             override fun onEndOfSpeech() { onResult("onEndOfSpeech") }
-            override fun onError(error: Int) { onResult("onError") }
+            override fun onError(error: Int) {
+                onResult("onError")
+                speechRecognizer?.startListening(Intent(RecognizerIntent.ACTION_VOICE_SEARCH_HANDS_FREE))
+            }
             override fun onResults(results: Bundle) {
-                val stringArray = results.getStringArrayList(android.speech.SpeechRecognizer.RESULTS_RECOGNITION);
-                onResult("onResults " + stringArray.toString())
+                val stringArray = results.getStringArrayList(android.speech.SpeechRecognizer.RESULTS_RECOGNITION)
+                //onResult(stringArray.toString())
+                if (stringArray != null) {
+                    onResult(stringArray.joinToString(""))
+                }
                 speechRecognizer?.startListening(Intent(RecognizerIntent.ACTION_VOICE_SEARCH_HANDS_FREE))
             }
         }
@@ -247,7 +272,8 @@ class MainActivity : AppCompatActivity() {
 //    判別器の準備（一人でのLightningに固定)
     private fun createPoseEstimator() {
         showDetectionScore(true)
-        val poseDetector = MoveNet.create(this, device, ModelType.Lightning)
+        val poseDetector = MoveNet.create(this, device, ModelType.Thunder)
+//        val poseDetector = MoveNet.create(this, device, ModelType.Lightning)
         cameraSource?.setDetector(poseDetector)
     }
 

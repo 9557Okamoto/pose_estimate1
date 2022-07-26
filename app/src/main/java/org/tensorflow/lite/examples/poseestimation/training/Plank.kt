@@ -6,7 +6,7 @@ import kotlin.math.acos
 
 class Plank(context: Context): KeepTraining("Plank", context) {
 
-    private var count1: Int = 0
+    private var count: Int = 0
     // カウントする条件
     override fun isKeep(person: Person): Boolean {
         var knee_x = 0.0f
@@ -72,11 +72,20 @@ class Plank(context: Context): KeepTraining("Plank", context) {
         rad = acos(cos)
         deg = Math.toDegrees(rad.toDouble()).toFloat()
 
-        return if(deg < 165){
+        if(deg < 165){
+            count++
+        }
+        return if(deg<165 && count==30){
+            count=0
             "腰が曲がっています"
         }else{
             "その調子です"
         }
+//        return if(deg < 165){
+//            "腰が曲がっています"
+//        }else{
+//            "その調子です"
+//        }
     }
 
     // 消費カロリーの計算

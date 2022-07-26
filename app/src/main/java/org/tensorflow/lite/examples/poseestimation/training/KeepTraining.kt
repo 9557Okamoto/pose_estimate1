@@ -54,6 +54,9 @@ abstract class KeepTraining(name: String, context: Context) : Training(name, con
                     count++
                     time = 0
                     start = null
+                    if(count%5==0){
+                        speak(getResult())
+                    }
                 }
             }
             if(!isKeep(person)){
