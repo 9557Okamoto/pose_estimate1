@@ -27,6 +27,7 @@ import android.os.Process
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
+import android.speech.tts.TextToSpeech
 import android.view.SurfaceView
 import android.view.View
 import android.view.WindowManager
@@ -45,12 +46,17 @@ import org.tensorflow.lite.examples.poseestimation.data.Device
 import org.tensorflow.lite.examples.poseestimation.ml.*
 import org.tensorflow.lite.examples.poseestimation.training.Plank
 import org.tensorflow.lite.examples.poseestimation.training.Squat
+import java.util.*
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener  {
     companion object {
         private const val FRAGMENT_DIALOG = "dialog"
         private const val PERMISSIONS_RECORD_AUDIO = 1000
     }
+
+    private var textToSpeech: TextToSpeech? = null
+
     private var speechRecognizer : SpeechRecognizer? = null
     private lateinit var recognize_text_view: TextView
     private lateinit var recognize_start_button: Button
@@ -94,6 +100,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        textToSpeech = TextToSpeech(this, this)
+
         recognize_text_view= findViewById(R.id.recognize_text_view)
         recognize_start_button = findViewById(R.id.recognize_start_button)
         recognize_stop_button = findViewById(R.id.recognize_stop_button)
@@ -137,16 +146,19 @@ class MainActivity : AppCompatActivity() {
 
         speechRecognizer?.setRecognitionListener(createRecognitionListenerStringStream {
             if(it == "プランク開始"){
+                speak("プランク開始")
                 if(cameraSource != null){
                     cameraSource?.training = Plank(this)
                 }
             }
             if(it == "スクワット開始"){
+                speak("スクワット開始")
                 if(cameraSource != null){
                     cameraSource?.training = Squat(this)
                 }
             }
             if(it == "終了"){
+                speak("終了")
                 if(cameraSource != null){
                     cameraSource?.training = null
                 }
@@ -183,9 +195,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            textToSpeech?.let { tts ->
+                val locale = Locale.JAPAN
+                if (tts.isLanguageAvailable(locale) > TextToSpeech.LANG_AVAILABLE) {
+                    tts.language = Locale.JAPAN
+                }
+                //声の速度
+                this.textToSpeech!!.setSpeechRate(1.2f)
+                //声の高さ
+                this.textToSpeech!!.setPitch(0.8f)
+            }
+        }
+    }
+
+    private fun speak(text: String){
+        this.textToSpeech!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, "utteranceId")
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         speechRecognizer?.destroy()
+        //textToSpeech?.shutdown()
     }
 
     override fun onStart() {
