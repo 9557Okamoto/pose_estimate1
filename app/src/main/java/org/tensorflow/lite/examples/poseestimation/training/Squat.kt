@@ -61,7 +61,7 @@ class Squat(context: Context): CountTraining("Squat", context) {
         rad2 = acos(cos2)
         deg2 = Math.toDegrees(rad2.toDouble()).toFloat()
 
-        return deg<=90 && deg2<=90
+        return deg in 60.0..90.0 && deg2 in 60.0..90.0
     }
 
     // 足が伸びてるか

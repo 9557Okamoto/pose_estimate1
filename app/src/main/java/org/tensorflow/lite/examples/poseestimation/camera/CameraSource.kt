@@ -64,6 +64,8 @@ class CameraSource(
 
     var training: Training? = null
 
+//    var cameraselect = false
+
     /** Frame count that have been processed so far in an one second interval to calculate FPS. */
     private var fpsTimer: Timer? = null
     private var frameProcessedInOneSecondInterval = 0
@@ -196,12 +198,14 @@ class CameraSource(
 
             // We don't use a front facing camera in this sample.
             val cameraDirection = characteristics.get(CameraCharacteristics.LENS_FACING)
+
             if (cameraDirection != null &&
                 //cameraDirection == CameraCharacteristics.LENS_FACING_FRONT
                 cameraDirection == CameraCharacteristics.LENS_FACING_BACK
             ) {
                 continue
             }
+
             this.cameraId = cameraId
         }
     }
@@ -283,7 +287,8 @@ class CameraSource(
         if(training != null){
             training!!.addPerson(persons[0])
             listener?.CountListener(training!!.getResult())
-            listener?.CalorieListener(training!!.getKcal().toString())
+            listener?.CalorieListener(training!!.getKcal())
+            listener?.AttentionListener(training!!.getAttentionCount())
         }
 
 
@@ -386,5 +391,7 @@ class CameraSource(
         fun CountListener(count: String)
 
         fun CalorieListener(calorie: String)
+
+        fun AttentionListener(attention: String)
     }
 }

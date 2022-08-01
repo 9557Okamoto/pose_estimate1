@@ -75,7 +75,7 @@ class Plank(context: Context): KeepTraining("Plank", context) {
         if(deg < 165){
             count++
         }
-        return if(deg<165 && count==30){
+        return if(deg<165 && count==20){
             count=0
             "腰が曲がっています"
         }else{

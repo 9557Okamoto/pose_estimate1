@@ -9,11 +9,12 @@ import java.time.ZoneOffset
 abstract class KeepTraining(name: String, context: Context) : Training(name, context) {
 
     private var start: LocalDateTime? = null
-    private var finish: LocalDateTime? = null
+//    private var finish: LocalDateTime? = null
     private var now: LocalDateTime? = null
-    private var keeping: Boolean = false
+//    private var keeping: Boolean = false
     private var count: Int = 0
     private var time: Int = 0
+    private var countattention: Int = 0
 //    private val listener: KeepTraining.KeepTrainingListener? = null
 
     override fun addPerson(person: Person) {
@@ -24,7 +25,8 @@ abstract class KeepTraining(name: String, context: Context) : Training(name, con
             if (attention != message2) {
 //                listener?.Attention(attention)
                 speak(attention)
-                count=0
+                count -= 2
+                countattention++
                 return
             }
 
@@ -54,14 +56,14 @@ abstract class KeepTraining(name: String, context: Context) : Training(name, con
                     count++
                     time = 0
                     start = null
-                    if(count%5==0){
+                    if(count%10==0){
                         speak(getResult())
                     }
                 }
             }
-            if(!isKeep(person)){
-                count = 0
-            }
+//            if(!isKeep(person)){
+//                count = 0
+//            }
         }
 
 //            if(isKeep() && count == 0){
@@ -81,10 +83,13 @@ abstract class KeepTraining(name: String, context: Context) : Training(name, con
         return "${count}秒"
     }
 
-    override fun getKcal(): Float {
-        return count.toFloat()/10.0f
+    override fun getKcal(): String {
+        return "消費カロリー：${count.toFloat()/10.0f}カロリー"
     }
 
+    override fun getAttentionCount(): String{
+        return "注意回数：${countattention}回"
+    }
     protected abstract fun isKeep(person: Person): Boolean
 
 //    private fun getSecond(): Int{

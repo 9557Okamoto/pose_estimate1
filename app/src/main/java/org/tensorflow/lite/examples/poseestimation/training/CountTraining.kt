@@ -6,6 +6,7 @@ import org.tensorflow.lite.examples.poseestimation.data.Person
 abstract class CountTraining(name: String, context: Context) : Training(name, context) {
 
     private var count: Int = 0
+    private var countattention: Int = 0
     private var counting: Boolean = false
 
     override fun addPerson(person: Person) {
@@ -31,6 +32,7 @@ abstract class CountTraining(name: String, context: Context) : Training(name, co
 
             if(attention != message1){
                 speak(attention)
+                countattention++
                 return
             }
 
@@ -49,9 +51,14 @@ abstract class CountTraining(name: String, context: Context) : Training(name, co
         return "${count}回"
     }
 
-    override fun getKcal(): Float {
-        return 0.4f * count
+    override fun getKcal(): String {
+        return "消費カロリー：${0.4f * count}カロリー"
     }
+
+    override fun getAttentionCount(): String{
+        return "注意回数：${countattention}回"
+    }
+
     protected abstract fun isCount(person: Person): Boolean
 
     protected abstract fun isCountRelease(person: Person): Boolean

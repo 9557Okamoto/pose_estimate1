@@ -34,7 +34,10 @@ abstract class Training(val name: String, val context: Context): TextToSpeech.On
     abstract fun getResult(): String
 
     // 消費カロリーを渡す
-    abstract fun  getKcal(): Float
+    abstract fun  getKcal(): String
+
+    //注意回数を渡す
+    abstract fun getAttentionCount(): String
 
     // 入力された文字列を読み上げる
     // TODO

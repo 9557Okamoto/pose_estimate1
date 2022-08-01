@@ -28,24 +28,6 @@
         android:textColor="@color/white"
         android:textSize="10sp"
         app:layout_constraintTop_toBottomOf="@id/tvFps"
-        app:layout_constraintBottom_toTopOf="@id/count"/>
-
-    <TextView
-        android:id="@+id/count"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textSize="10sp"
-        app:layout_constraintTop_toBottomOf="@+id/tvScore"
-        app:layout_constraintBottom_toTopOf="@id/calorie"/>
-
-    <TextView
-        android:id="@+id/calorie"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textSize="10sp"
-        app:layout_constraintTop_toBottomOf="@+id/count"
         app:layout_constraintBottom_toTopOf="@id/recognize_text_view"/>
 
     <TextView
@@ -54,42 +36,71 @@
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:text="Default"
-        android:textSize="20sp"
+        android:textSize="10sp"
+        app:layout_constraintTop_toBottomOf="@+id/tvScore"
+        app:layout_constraintBottom_toTopOf="@id/count" />
+
+    <TextView
+        android:id="@+id/count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@+id/recognize_text_view"
+        app:layout_constraintBottom_toTopOf="@id/calorie"/>
+
+    <TextView
+        android:id="@+id/calorie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@+id/count"
+        app:layout_constraintBottom_toTopOf="@id/attention"/>
+
+    <TextView
+        android:id="@+id/attention"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="15sp"
         app:layout_constraintTop_toBottomOf="@+id/calorie" />
 
-    <Button
-        android:id="@+id/PlankBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PLANK"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/SquatBtn" />
 
-    <Button
-        android:id="@+id/SquatBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SQUAT"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/recognize_start_button"
-        app:layout_constraintStart_toEndOf="@+id/PlankBtn" />
 
-    <Button
-        android:id="@+id/recognize_start_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="START"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/recognize_stop_button"
-        app:layout_constraintStart_toEndOf="@+id/SquatBtn" />
+<!--    <Button-->
+<!--        android:id="@+id/FrontBtn"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="FRONT"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/BackBtn" />-->
 
-    <Button
-        android:id="@+id/recognize_stop_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="STOP"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/recognize_start_button" />
+<!--    <Button-->
+<!--        android:id="@+id/BackBtn"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="BACK"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/FrontBtn" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/recognize_start_button"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="START"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/recognize_stop_button"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/SquatBtn" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/recognize_stop_button"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="STOP"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/recognize_start_button" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

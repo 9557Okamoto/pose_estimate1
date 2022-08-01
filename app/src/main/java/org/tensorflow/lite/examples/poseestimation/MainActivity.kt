@@ -59,8 +59,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener  {
 
     private var speechRecognizer : SpeechRecognizer? = null
     private lateinit var recognize_text_view: TextView
-    private lateinit var recognize_start_button: Button
-    private lateinit var recognize_stop_button: Button
+//    private lateinit var FrontBtn: Button
+//    private lateinit var BackBtn: Button
 
     private lateinit var surfaceView: SurfaceView
 
@@ -74,8 +74,9 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener  {
 //    private lateinit var taisei: TextView
     private lateinit var count: TextView
     private lateinit var calorie: TextView
-    private lateinit var PlankBtn: Button
-    private lateinit var SquatBtn: Button
+    private lateinit var attention: TextView
+//    private lateinit var PlankBtn: Button
+//    private lateinit var SquatBtn: Button
     private var cameraSource: CameraSource? = null
 
     private val requestPermissionLauncher =
@@ -104,8 +105,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener  {
         textToSpeech = TextToSpeech(this, this)
 
         recognize_text_view= findViewById(R.id.recognize_text_view)
-        recognize_start_button = findViewById(R.id.recognize_start_button)
-        recognize_stop_button = findViewById(R.id.recognize_stop_button)
+//        FrontBtn = findViewById(R.id.FrontBtn)
+//        BackBtn = findViewById(R.id.BackBtn)
         // keep screen on while app is running
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         tvScore = findViewById(R.id.tvScore)
@@ -116,8 +117,9 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener  {
 //        taisei = findViewById(R.id.taisei)
         count = findViewById(R.id.count)
         calorie = findViewById(R.id.calorie)
-        PlankBtn = findViewById(R.id.PlankBtn)
-        SquatBtn = findViewById(R.id.SquatBtn)
+        attention = findViewById(R.id.attention)
+//        PlankBtn = findViewById(R.id.PlankBtn)
+//        SquatBtn = findViewById(R.id.SquatBtn)
         surfaceView = findViewById(R.id.surfaceView)
 
 //        PlankBtn.setOnClickListener {
@@ -131,6 +133,13 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener  {
 //            }
 //        }
 
+//        BackBtn.setOnClickListener{
+//            cameraSource?.cameraselect = true
+//        }
+//
+//        FrontBtn.setOnClickListener{
+//            cameraSource?.cameraselect = false
+//        }
 
         if (!isCameraPermissionGranted()) {
             requestPermission()
@@ -158,7 +167,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener  {
                 }
             }
             if(it == "終了"){
-                speak("終了")
+                speak("トレーニング終了")
                 if(cameraSource != null){
                     cameraSource?.training = null
                 }
@@ -283,11 +292,15 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener  {
 //                        }
 
                         override fun CalorieListener(Calorie: String) {
-                            calorie.text = "${Calorie}カロリー"
+                            calorie.text = Calorie
                         }
 
                         override fun CountListener(Count: String) {
                              count.text = Count
+                        }
+
+                        override fun AttentionListener(Attention: String) {
+                            attention.text = Attention
                         }
 
                     }).apply {
