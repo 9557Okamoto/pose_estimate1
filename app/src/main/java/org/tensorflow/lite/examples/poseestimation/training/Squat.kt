@@ -8,7 +8,8 @@ class Squat(context: Context): CountTraining("Squat", context) {
 
     private var point1: Int = 0
     private var point2: Int = 0
-    private var count: Int = 0
+    private var count1: Int = 0
+    private var count2: Int = 0
 
     // 足を曲げたとき
     override fun isCount(person: Person): Boolean {
@@ -53,7 +54,7 @@ class Squat(context: Context): CountTraining("Squat", context) {
         rad = acos(cos)
         deg = Math.toDegrees(rad.toDouble()).toFloat()
 
-        nume2 = (sho_x - hip_x)*(knee_x - sho_x) + (sho_y - hip_y)*(knee_y - hip_y)
+        nume2 = (sho_x - hip_x)*(knee_x - hip_x) + (sho_y - hip_y)*(knee_y - hip_y)
         deno2_1 = sqrt((sho_x - hip_x)*(sho_x - hip_x) + (sho_y - hip_y)*(sho_y - hip_y))
         deno2_2 = sqrt((knee_x - hip_x)*(knee_x - hip_x) + (knee_y - hip_y)*(knee_y - hip_y))
         deno2 = deno2_1 * deno2_2
@@ -61,7 +62,7 @@ class Squat(context: Context): CountTraining("Squat", context) {
         rad2 = acos(cos2)
         deg2 = Math.toDegrees(rad2.toDouble()).toFloat()
 
-        return deg in 60.0..90.0 && deg2 in 60.0..90.0
+        return deg in 60.0f..80.0f && deg2 in 60.0f..90.0f
     }
 
     // 足が伸びてるか
@@ -108,7 +109,7 @@ class Squat(context: Context): CountTraining("Squat", context) {
         rad = acos(cos)
         deg = Math.toDegrees(rad.toDouble()).toFloat()
 
-        nume2 = (sho_x - hip_x)*(knee_x - sho_x) + (sho_y - hip_y)*(knee_y - hip_y)
+        nume2 = (sho_x - hip_x)*(knee_x - hip_x) + (sho_y - hip_y)*(knee_y - hip_y)
         deno2_1 = sqrt((sho_x - hip_x)*(sho_x - hip_x) + (sho_y - hip_y)*(sho_y - hip_y))
         deno2_2 = sqrt((knee_x - hip_x)*(knee_x - hip_x) + (knee_y - hip_y)*(knee_y - hip_y))
         deno2 = deno2_1 * deno2_2
@@ -116,13 +117,23 @@ class Squat(context: Context): CountTraining("Squat", context) {
         rad2 = acos(cos2)
         deg2 = Math.toDegrees(rad2.toDouble()).toFloat()
 
-        return deg >= 160 && deg2 >= 160
+        return deg >= 170.0f && deg2 >= 170.0f
     }
 
     // 膝が前に出てないか等
     override fun attention(person: Person): String{
 
         var message: String = message1
+
+        var sho_x = 0.0f
+        var sho_y = 0.0f
+        var nume3 = 0.0f
+        var deno3 = 0.0f
+        var deno3_1 = 0.0f
+        var deno3_2 = 0.0f
+        var cos3 = 0.0f
+        var deg3 = 0.0f
+        var rad3 = 0.0f
 
         var hip_x = 0.0f
         var hip_y = 0.0f
@@ -152,6 +163,8 @@ class Squat(context: Context): CountTraining("Squat", context) {
         var deg2 = 0.0f
         var rad2 = 0.0f
 
+        sho_x = person.keyPoints[6].coordinate.x
+        sho_y = person.keyPoints[6].coordinate.y
         knee_x = person.keyPoints[14].coordinate.x
         knee_y = person.keyPoints[14].coordinate.y
         ankle_x = person.keyPoints[16].coordinate.x
@@ -165,6 +178,14 @@ class Squat(context: Context): CountTraining("Squat", context) {
         ankle_y2 = personList.last().keyPoints[16].coordinate.y
         hip_x2 = personList.last().keyPoints[12].coordinate.x
         hip_y2 = personList.last().keyPoints[12].coordinate.y
+
+        nume3 = (sho_x - hip_x)*(knee_x - hip_x) + (sho_y - hip_y)*(knee_y - hip_y)
+        deno3_1 = sqrt((sho_x - hip_x)*(sho_x - hip_x) + (sho_y - hip_y)*(sho_y - hip_y))
+        deno3_2 = sqrt((knee_x - hip_x)*(knee_x - hip_x) + (knee_y - hip_y)*(knee_y - hip_y))
+        deno3 = deno3_1 * deno3_2
+        cos3 = nume3/deno3
+        rad3 = acos(cos3)
+        deg3 = Math.toDegrees(rad3.toDouble()).toFloat()
 
         nume = (hip_x - knee_x)*(ankle_x - knee_x) + (hip_y - knee_y)*(ankle_y - knee_y)
         deno1_1 = sqrt((ankle_x - knee_x)*(ankle_x - knee_x) + (ankle_y - knee_y)*(ankle_y - knee_y))
@@ -182,25 +203,41 @@ class Squat(context: Context): CountTraining("Squat", context) {
         rad2 = acos(cos2)
         deg2 = Math.toDegrees(rad2.toDouble()).toFloat()
 
-        if(deg <= 80 && deg2 > 80){
+
+        println(deg)
+        println(deg2)
+
+
+        if(deg <= 80.0f && deg2 > 80.0f){
+//            println(deg)
+//            println(deg2)
             point1 = 1
         }
-        if(deg >= 160 && deg2 < 160){
+        if(deg >= 160.0f && deg2 < 160.0f){
+//            println(deg)
+//            println(deg2)
             point2 = 1
-            count++
+            count1++
         }
-        if(deg >= 160 && deg2 < 160 && point1 == 0 && deg2 != 0.0f){
+        if(deg >= 160.0f && deg2 < 160.0f && point1 == 0 && deg2 != 0.0f){
             message = message3
+//            point1 = 0
         }
-        if(deg <= 80 && deg2 > 80 && point2 == 0 && deg2 != 0.0f && count != 0){
+
+        if(deg <= 80.0f && deg2 > 80.0f && point2 == 0 && deg2 != 0.0f && count1 != 0){
             message = message4
+//            point2 = 0
+        }else if(deg3 <60.0f){
+            message  = message5
         }
-        if(deg >= 160 && deg2 < 160 && point1 != 0 && deg2 !=0.0f){
+
+        if(deg >= 160.0f && deg2 < 160.0f && point1 != 0 && deg2 !=0.0f){
             point1 = 0
         }
-        if(deg <= 80 && deg2 > 80 && point2 != 0 && deg2 != 0.0f){
+        if(deg <= 80.0f && deg2 > 80.0f && point2 != 0 && deg2 != 0.0f){
             point2 = 0
         }
+
         return when (message) {
             message1 -> {
                 message1
@@ -208,8 +245,11 @@ class Squat(context: Context): CountTraining("Squat", context) {
             message3 -> {
                 message3
             }
-            else -> {
+            message4 -> {
                 message4
+            }
+            else -> {
+                message5
             }
         }
 

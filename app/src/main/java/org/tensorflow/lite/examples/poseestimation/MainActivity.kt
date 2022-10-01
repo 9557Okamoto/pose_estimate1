@@ -154,13 +154,13 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener  {
         //speechRecognizer?.setRecognitionListener(createRecognitionListenerStringStream { recognize_text_view.text = it })
 
         speechRecognizer?.setRecognitionListener(createRecognitionListenerStringStream {
-            if(it == "プランク開始"){
+            if(it == "プランク"){
                 speak("プランク開始")
                 if(cameraSource != null){
                     cameraSource?.training = Plank(this)
                 }
             }
-            if(it == "スクワット開始"){
+            if(it == "スクワット"){
                 speak("スクワット開始")
                 if(cameraSource != null){
                     cameraSource?.training = Squat(this)

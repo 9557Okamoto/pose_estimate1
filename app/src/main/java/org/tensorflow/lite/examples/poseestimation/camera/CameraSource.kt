@@ -273,6 +273,7 @@ class CameraSource(
         if (frameProcessedInOneSecondInterval == 1) {
             // send fps to view
             listener?.onFPSListener(framesPerSecond)
+//            println(framesPerSecond)
         }
 
         // if the model returns only one item, show that item's score.

@@ -45,10 +45,10 @@ abstract class KeepTraining(name: String, context: Context) : Training(name, con
 //                keeping = true
 //            }
 
-            if(isKeep(person) && start==null){
+            if(isKeep(person) && Lie(person) && start==null){
                 start = LocalDateTime.now()
             }
-            if(isKeep(person) && start!=null){
+            if(isKeep(person) && Lie(person) && start!=null){
                 now = LocalDateTime.now()
                 time = ((now?.toEpochSecond(ZoneOffset.ofHours(+9)) ?: 0) - (start?.toEpochSecond(ZoneOffset.ofHours(+9)) ?: 0)).toInt()
 
@@ -91,6 +91,8 @@ abstract class KeepTraining(name: String, context: Context) : Training(name, con
         return "注意回数：${countattention}回"
     }
     protected abstract fun isKeep(person: Person): Boolean
+
+    protected abstract fun Lie(person: Person): Boolean
 
 //    private fun getSecond(): Int{
 //        return ((finish?.toEpochSecond(ZoneOffset.ofHours(+9)) ?: 0) -

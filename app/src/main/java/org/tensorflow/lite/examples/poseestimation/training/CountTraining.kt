@@ -39,8 +39,12 @@ abstract class CountTraining(name: String, context: Context) : Training(name, co
             if(isCount(person) && !counting){
                 count++
                 counting = true
+//                speak(getResult())
+            }else if(isCountRelease(person) && counting){
+//                if(count!=0){
+
                 speak(getResult())
-            }else if(isCountRelease(person)){
+//                }
                 counting = false
             }
         }
