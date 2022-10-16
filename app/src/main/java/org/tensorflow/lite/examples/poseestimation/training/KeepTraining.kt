@@ -9,71 +9,81 @@ import java.time.ZoneOffset
 abstract class KeepTraining(name: String, context: Context) : Training(name, context) {
 
     private var start: LocalDateTime? = null
-//    private var finish: LocalDateTime? = null
     private var now: LocalDateTime? = null
-//    private var keeping: Boolean = false
     private var count: Int = 0
     private var time: Int = 0
     private var countattention: Int = 0
-//    private val listener: KeepTraining.KeepTrainingListener? = null
 
     override fun addPerson(person: Person) {
         if(personList.isNotEmpty()) {
-
-            val attention: String = attention(person)
-
-            if (attention != message2) {
-//                listener?.Attention(attention)
-                speak(attention)
+            val lieattention: String = LieAttention(person)
+            if(lieattention!=message2){
+                speak(lieattention)
+                countattention++
+                return
+            }
+            val waistattention: String = WaistAttention(person)
+            if(waistattention!=message2){
+                speak(waistattention)
                 count -= 2
                 countattention++
                 return
             }
+            val elbowattention: String = ElbowAttention(person)
+            if(elbowattention!=message2){
+                speak(elbowattention)
+                countattention++
+                return
+            }
 
-//            if (isKeep()) {
-//                if (!keeping && count==0) {
-//                    start = LocalDateTime.now()
-//                    count++
-//                } else if(keeping){
-//                    finish = LocalDateTime.now()
-//                    count = 0
-//                    keeping = false
-//                }
-//                // 1秒毎にカウントするなら別のスレッドを建てる必要があると思う
-//                //            speak(getResult())
-//            } else {
-//                keeping = true
-//            }
-
-            if(isKeep(person) && Lie(person) && start==null){
+            if(Waist(person) && Elbow(person) && Shoulder(person) && Lie(person) && start==null){
                 start = LocalDateTime.now()
             }
-            if(isKeep(person) && Lie(person) && start!=null){
-                now = LocalDateTime.now()
-                time = ((now?.toEpochSecond(ZoneOffset.ofHours(+9)) ?: 0) - (start?.toEpochSecond(ZoneOffset.ofHours(+9)) ?: 0)).toInt()
 
-                if(time>=1){
+            if(Waist(person) && Elbow(person) && Shoulder(person) && Lie(person) && start!=null) {
+                now = LocalDateTime.now()
+                time = ((now?.toEpochSecond(ZoneOffset.ofHours(+9)) ?: 0) - (start?.toEpochSecond(
+                    ZoneOffset.ofHours(+9)
+                ) ?: 0)).toInt()
+
+                if (time >= 1) {
                     count++
                     time = 0
                     start = null
-                    if(count%10==0){
+                    if (count % 10 == 0) {
                         speak(getResult())
                     }
                 }
             }
-//            if(!isKeep(person)){
-//                count = 0
-//            }
         }
 
-//            if(isKeep() && count == 0){
-//                start = LocalDateTime.now()
-//                count++
-//            }else if(){
-//                finish = LocalDateTime.now()
-//                keeping = true
+
+//            val attention: String = attention(person)
+//
+//            if (attention != message2) {
+//                speak(attention)
+//                count -= 2
+//                countattention++
+//                return
 //            }
-//        }
+//
+//
+//            if(isKeep(person) && Lie(person) && start==null){
+//                start = LocalDateTime.now()
+//            }
+//            if(isKeep(person) && Lie(person) && start!=null){
+//                now = LocalDateTime.now()
+//                time = ((now?.toEpochSecond(ZoneOffset.ofHours(+9)) ?: 0) - (start?.toEpochSecond(ZoneOffset.ofHours(+9)) ?: 0)).toInt()
+//
+//                if(time>=1){
+//                    count++
+//                    time = 0
+//                    start = null
+//                    if(count%10==0){
+//                        speak(getResult())
+//                    }
+//                }
+//            }
 
         personList = personList.plus(person)
 
@@ -90,9 +100,16 @@ abstract class KeepTraining(name: String, context: Context) : Training(name, con
     override fun getAttentionCount(): String{
         return "注意回数：${countattention}回"
     }
-    protected abstract fun isKeep(person: Person): Boolean
+
+//    protected abstract fun isKeep(person: Person): Boolean
 
     protected abstract fun Lie(person: Person): Boolean
+    protected abstract fun Waist(person: Person): Boolean
+    protected abstract fun Shoulder(person: Person): Boolean
+    protected abstract fun Elbow(person: Person): Boolean
+    protected abstract fun WaistAttention(person: Person): String
+    protected abstract fun LieAttention(person: Person): String
+    protected abstract fun ElbowAttention(person: Person): String
 
 //    private fun getSecond(): Int{
 //        return ((finish?.toEpochSecond(ZoneOffset.ofHours(+9)) ?: 0) -

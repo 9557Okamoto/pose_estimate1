@@ -318,7 +318,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener  {
     private fun createPoseEstimator() {
         showDetectionScore(true)
         val poseDetector = MoveNet.create(this, device, ModelType.Thunder)
-//        val poseDetector = MoveNet.create(this, device, ModelType.Lightning)
+        //val poseDetector = MoveNet.create(this, device, ModelType.Lightning)
         cameraSource?.setDetector(poseDetector)
     }
 

@@ -13,38 +13,18 @@ abstract class CountTraining(name: String, context: Context) : Training(name, co
         if(personList.isNotEmpty()){
             var attention: String = attention(person)
 
-//            if(attention == message1){
-//                return
-//            }
-//            if(attention == message3){
-//                speak(attention)
-//                return
-//            }
-//            if(attention == message4){
-//                speak(attention)
-//                return
-//            }
-//            if(attention == message5) {
-//                count++
-//                return
-//            }
-//        }
-
             if(attention != message1){
                 speak(attention)
                 countattention++
+                personList = personList.plus(person)
                 return
             }
 
             if(isCount(person) && !counting){
                 count++
                 counting = true
-//                speak(getResult())
             }else if(isCountRelease(person) && counting){
-//                if(count!=0){
-
                 speak(getResult())
-//                }
                 counting = false
             }
         }
@@ -62,6 +42,7 @@ abstract class CountTraining(name: String, context: Context) : Training(name, co
     override fun getAttentionCount(): String{
         return "注意回数：${countattention}回"
     }
+    protected abstract fun attention(person: Person): String
 
     protected abstract fun isCount(person: Person): Boolean
 

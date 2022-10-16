@@ -13,8 +13,13 @@ abstract class Training(val name: String, val context: Context): TextToSpeech.On
     var message1 : String = ""
     var message2 : String = "その調子です"
     var message3 : String = "膝をもっと曲げてください"
-    var message4 : String = "膝を伸ばし切ってください"
+    var message4 : String = "膝を伸ばしてください"
     var message5 : String = "背筋を伸ばして下さい"
+    var message6 : String = "肘を90度にしてください"
+    var message7 : String = "横になってください"
+    var message8 : String = "体を一直線にしてください"
+    var message9 : String = "膝が前に出ています"
+
 //    var message5: String = "腰が曲がっています"
 
     init {
@@ -30,7 +35,7 @@ abstract class Training(val name: String, val context: Context): TextToSpeech.On
     abstract fun addPerson(person: Person)
 
     // 注意
-    protected abstract fun attention(person: Person): String
+//    protected abstract fun attention(person: Person): String
 
     // 結果（途中結果）を渡す
     abstract fun getResult(): String
