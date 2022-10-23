@@ -8,6 +8,7 @@ class Squat(context: Context): CountTraining("Squat", context) {
 
     private var point1: Int = 0
     private var point2: Int = 0
+    private var count0: Int = 0
     private var count1: Int = 0
     private var count2: Int = 0
     private var count3: Int = 0
@@ -16,7 +17,7 @@ class Squat(context: Context): CountTraining("Squat", context) {
     // 足を曲げたとき
     override fun isCount(person: Person): Boolean {
 
-//        println("sho_x:${person.score.}")
+        var bool: Boolean = false
 
         var sho_x = 0.0f
         var sho_y = 0.0f
@@ -76,7 +77,21 @@ class Squat(context: Context): CountTraining("Squat", context) {
 //            println("knee_x:${knee_x}")
 //        }
 
-        return deg in 60.0f..80.0f && deg2 in 60.0f..90.0f && (ankle_x + dis) > knee_x
+        if(ankle_x < knee_x){
+            bool = ankle_x + dis > knee_x
+        }
+        if(ankle_x > knee_x){
+            bool = ankle_x - dis < knee_x
+        }
+
+        if(deg in 60.0f..80.0f && deg2 in 50.0f..90.0f && bool){
+            count0++
+        }else{
+            count0 = 0
+        }
+
+        return count0 == 2
+//        return deg in 60.0f..80.0f && deg2 in 60.0f..90.0f && (ankle_x + dis) > knee_x
     }
 
     // 足が伸びてるか
@@ -138,6 +153,8 @@ class Squat(context: Context): CountTraining("Squat", context) {
     override fun attention(person: Person): String{
 
         var message: String = message1
+
+        var bool: Boolean = false
 
         var hip_x = 0.0f
         var hip_y = 0.0f
@@ -247,35 +264,45 @@ class Squat(context: Context): CountTraining("Squat", context) {
             point2 = 0
         }
 
+        if(ankle_x < knee_x && deg < 120){
+            bool = ankle_x + dis < knee_x
+        }
+        if(ankle_x > knee_x && deg < 120){
+            bool = ankle_x - dis > knee_x
+        }
+
         if(message == message1){
-            if(deg >= 160.0f && deg3 <=160.0f){
-                count2++
-                if(count2==15) {
-                    message = message5
-                    count2 = 0
-                }
-//                }else{
-//                    count2 = 0
-//                }
-            }
-            if((ankle_x + dis) < knee_x){
+            if(bool) {
                 count3++
-                if(count3==15) {
-                    message = message9
-                    count3 = 0
-                }
-//                }else{
-//                    count3 = 0
-//                }
-            }else if(deg < 80.0f && deg3 < 60.0f){
+            }else{
+                count3 = 0
+            }
+
+            if(count3==8) {
+                message = message9
+                count3 = 0
+            }
+
+            if(message != message9 && deg < 80.0f && deg3 < 50.0f) {
                 count4++
-                if(count4==15) {
+            }else {
+                count4 = 0
+            }
+
+            if(count4==5) {
                     message = message5
                     count4 = 0
-                }
-//                }else{
-//                    count4 = 0
-//                }
+            }
+
+            if(message != message9 && deg >= 160.0f && deg3 <=160.0f) {
+                count2++
+            }else {
+                count2 = 0
+            }
+
+            if(count2==15) {
+                message = message5
+                count2 = 0
             }
         }
 

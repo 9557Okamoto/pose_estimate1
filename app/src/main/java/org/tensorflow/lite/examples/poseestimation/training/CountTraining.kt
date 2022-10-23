@@ -11,6 +11,20 @@ abstract class CountTraining(name: String, context: Context) : Training(name, co
 
     override fun addPerson(person: Person) {
         if(personList.isNotEmpty()){
+
+//            println("nose:${person.keyPoints[0].score}")
+//            println("eye_l:${person.keyPoints[1].score}")
+//            println("eye_r:${person.keyPoints[2].score}")
+//
+//            println("sho_l:${person.keyPoints[5].score}")
+//            println("sho_r:${person.keyPoints[6].score}")
+//            println("hip_l:${person.keyPoints[11].score}")
+//            println("hip_r:${person.keyPoints[12].score}")
+//            println("knee_l:${person.keyPoints[13].score}")
+//            println("knee_r:${person.keyPoints[14].score}")
+//            println("ankle_l:${person.keyPoints[15].score}")
+//            println("ankle_r:${person.keyPoints[16].score}")
+
             var attention: String = attention(person)
 
             if(attention != message1){

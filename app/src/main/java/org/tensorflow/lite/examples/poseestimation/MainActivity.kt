@@ -41,11 +41,12 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.tensorflow.lite.examples.poseestimation.camera.CameraSource
-import org.tensorflow.lite.examples.poseestimation.data.BodyPart
 import org.tensorflow.lite.examples.poseestimation.data.Device
 import org.tensorflow.lite.examples.poseestimation.ml.*
 import org.tensorflow.lite.examples.poseestimation.training.Plank
 import org.tensorflow.lite.examples.poseestimation.training.Squat
+import org.tensorflow.lite.examples.poseestimation.position.Plank1
+import org.tensorflow.lite.examples.poseestimation.position.Squat1
 import java.util.*
 
 
@@ -56,27 +57,15 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener  {
     }
 
     private var textToSpeech: TextToSpeech? = null
-
     private var speechRecognizer : SpeechRecognizer? = null
     private lateinit var recognize_text_view: TextView
-//    private lateinit var FrontBtn: Button
-//    private lateinit var BackBtn: Button
-
     private lateinit var surfaceView: SurfaceView
-
     private var device = Device.CPU
-
     private lateinit var tvScore: TextView
     private lateinit var tvFPS: TextView
-//    private lateinit var x: TextView
-//    private lateinit var y: TextView
-//    private lateinit var name: TextView
-//    private lateinit var taisei: TextView
     private lateinit var count: TextView
     private lateinit var calorie: TextView
     private lateinit var attention: TextView
-//    private lateinit var PlankBtn: Button
-//    private lateinit var SquatBtn: Button
     private var cameraSource: CameraSource? = null
 
     private val requestPermissionLauncher =
@@ -84,15 +73,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener  {
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                // Permission is granted. Continue the action or workflow in your
-                // app.
                 openCamera()
             } else {
-                // Explain to the user that the feature is unavailable because the
-                // features requires a permission that the user has denied. At the
-                // same time, respect the user's decision. Don't link to system
-                // settings in an effort to convince the user to change their
-                // decision.
                 ErrorDialog.newInstance(getString(R.string.tfe_pe_request_permission))
                     .show(supportFragmentManager, FRAGMENT_DIALOG)
             }
@@ -105,41 +87,13 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener  {
         textToSpeech = TextToSpeech(this, this)
 
         recognize_text_view= findViewById(R.id.recognize_text_view)
-//        FrontBtn = findViewById(R.id.FrontBtn)
-//        BackBtn = findViewById(R.id.BackBtn)
-        // keep screen on while app is running
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         tvScore = findViewById(R.id.tvScore)
         tvFPS = findViewById(R.id.tvFps)
-//        x = findViewById(R.id.x)
-//        y = findViewById(R.id.y)
-//        name = findViewById(R.id.name)
-//        taisei = findViewById(R.id.taisei)
         count = findViewById(R.id.count)
         calorie = findViewById(R.id.calorie)
         attention = findViewById(R.id.attention)
-//        PlankBtn = findViewById(R.id.PlankBtn)
-//        SquatBtn = findViewById(R.id.SquatBtn)
         surfaceView = findViewById(R.id.surfaceView)
-
-//        PlankBtn.setOnClickListener {
-//           if(cameraSource != null){
-//                cameraSource?.training = Plank(this)
-//            }
-//        }
-//        SquatBtn.setOnClickListener {
-//            if(cameraSource != null){
-//                cameraSource?.training = Squat(this)
-//            }
-//        }
-
-//        BackBtn.setOnClickListener{
-//            cameraSource?.cameraselect = true
-//        }
-//
-//        FrontBtn.setOnClickListener{
-//            cameraSource?.cameraselect = false
-//        }
 
         if (!isCameraPermissionGranted()) {
             requestPermission()
@@ -150,22 +104,71 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener  {
             ActivityCompat.requestPermissions(this, arrayOf(RECORD_AUDIO), PERMISSIONS_RECORD_AUDIO)
         }
 
+//        println(cameraSource?.message)
+
+        if(cameraSource != null){
+            if(cameraSource?.message == "プランク"){
+                cameraSource?.position = null
+                cameraSource?.training = Plank(this)
+                speak("プランク開始")
+            }
+        }
+
+        if(cameraSource != null){
+            if(cameraSource?.message == "スクワット"){
+                cameraSource?.position = null
+                cameraSource?.training = Squat(this)
+                speak("スクワット開始")
+            }
+        }
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(applicationContext)
-        //speechRecognizer?.setRecognitionListener(createRecognitionListenerStringStream { recognize_text_view.text = it })
 
         speechRecognizer?.setRecognitionListener(createRecognitionListenerStringStream {
+//            if(it == "プランク"){
+//                speak("プランク開始")
+//                if(cameraSource != null){
+//                    cameraSource?.training = Plank(this)
+//                }
+//            }
+//            if(it == "スクワット"){
+//                speak("スクワット開始")
+//                if(cameraSource != null){
+//                    cameraSource?.training = Squat(this)
+//                }
+//            }
+//            if(it == "終了"){
+//                speak("トレーニング終了")
+//                if(cameraSource != null){
+//                    cameraSource?.training = null
+//                }
+//            }
+//            recognize_text_view.text = it
             if(it == "プランク"){
-                speak("プランク開始")
+                speak("立ち位置確認")
                 if(cameraSource != null){
-                    cameraSource?.training = Plank(this)
+                    cameraSource?.position = Plank1(this)
                 }
             }
             if(it == "スクワット"){
-                speak("スクワット開始")
+                speak("立ち位置確認")
                 if(cameraSource != null){
-                    cameraSource?.training = Squat(this)
+                    cameraSource?.position = Squat1(this)
                 }
             }
+//            if(it == "プランク開始"){
+//                speak("プランク開始")
+//                if(cameraSource != null){
+//                    cameraSource?.position = null
+//                    cameraSource?.training = Plank(this)
+//                }
+//            }
+//            if(it == "スクワット開始"){
+//                speak("スクワット開始")
+//                if(cameraSource != null){
+//                    cameraSource?.position = null
+//                    cameraSource?.training = Squat(this)
+//                }
+//            }
             if(it == "終了"){
                 speak("トレーニング終了")
                 if(cameraSource != null){
@@ -174,10 +177,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener  {
             }
             recognize_text_view.text = it
         })
-        //recognize_start_button.setOnClickListener { speechRecognizer?.startListening(Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)) }
         speechRecognizer?.startListening(Intent(RecognizerIntent.ACTION_VOICE_SEARCH_HANDS_FREE))
-        // setOnclickListner でクリック動作を登録し、クリックで音声入力が停止するようにする
-        //recognize_stop_button.setOnClickListener { speechRecognizer?.stopListening() }
     }
 
     private fun createRecognitionListenerStringStream(onResult : (String)-> Unit) : RecognitionListener {
@@ -226,7 +226,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener  {
     override fun onDestroy() {
         super.onDestroy()
         speechRecognizer?.destroy()
-        //textToSpeech?.shutdown()
     }
 
     override fun onStart() {
@@ -270,39 +269,15 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener  {
                         ) {
                             tvScore.text = getString(R.string.tfe_pe_tv_score, personScore ?: 0f)
                         }
-//
-//                        override fun xValue(data1: Float) {
-//                            x.text = getString(R.string.tfe_pe_tv_x, data1)
-//                        }
-//
-//                        override fun yValue(data2: Float) {
-//                            y.text = getString(R.string.tfe_pe_tv_y, data2)
-//                        }
-//
-//                        override fun nameValue(data3: BodyPart) {
-//                            name.text = getString(R.string.tfe_pe_tv_name, data3)
-//                        }
-//
-//                        override fun taisei(data4: Float) {
-//                            taisei.text = getString(R.string.tfe_pe_tv_taisei, data4)
-//                        }
-
-//                        override fun message(data5: String) {
-//                            message.text = data5
-//                        }
-
                         override fun CalorieListener(Calorie: String) {
                             calorie.text = Calorie
                         }
-
                         override fun CountListener(Count: String) {
                              count.text = Count
                         }
-
                         override fun AttentionListener(Attention: String) {
                             attention.text = Attention
                         }
-
                     }).apply {
                         prepareCamera()
                     }

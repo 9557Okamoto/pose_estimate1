@@ -65,7 +65,7 @@ abstract class Training(val name: String, val context: Context): TextToSpeech.On
             //声の高さ
             this.tts!!.setPitch(0.8f)
             // 音声合成の実行
-            this.tts!!.speak("こんにちは", TextToSpeech.QUEUE_FLUSH, null, "utteranceId")
+//            this.tts!!.speak("こんにちは", TextToSpeech.QUEUE_FLUSH, null, "utteranceId")
         }
     }
 }

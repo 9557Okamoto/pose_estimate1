@@ -32,12 +32,11 @@ import android.view.SurfaceView
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.tensorflow.lite.examples.poseestimation.VisualizationUtils
 import org.tensorflow.lite.examples.poseestimation.YuvToRgbConverter
-import org.tensorflow.lite.examples.poseestimation.data.BodyPart
 import org.tensorflow.lite.examples.poseestimation.data.Person
 import org.tensorflow.lite.examples.poseestimation.ml.PoseDetector
 import org.tensorflow.lite.examples.poseestimation.training.Plank
-import org.tensorflow.lite.examples.poseestimation.training.Squat
 import org.tensorflow.lite.examples.poseestimation.training.Training
+import org.tensorflow.lite.examples.poseestimation.position.Position
 import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -63,6 +62,8 @@ class CameraSource(
     private lateinit var imageBitmap: Bitmap
 
     var training: Training? = null
+    var position: Position? = null
+    var message: String? = "aiueo"
 
 //    var cameraselect = false
 
@@ -284,6 +285,11 @@ class CameraSource(
 //        listener?.xValue(persons[0].keyPoints[0].coordinate.x)
 //        listener?.yValue(persons[0].keyPoints[0].coordinate.y)
 //        listener?.nameValue(persons[0].keyPoints[0].bodyPart)
+
+        if(position != null){
+            position!!.addPerson(persons[0])
+            message = position!!.getResult()
+        }
 
         if(training != null){
             training!!.addPerson(persons[0])
