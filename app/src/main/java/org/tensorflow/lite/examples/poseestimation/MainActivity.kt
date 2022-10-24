@@ -146,13 +146,15 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener  {
             if(it == "プランク"){
                 speak("立ち位置確認")
                 if(cameraSource != null){
-                    cameraSource?.position = Plank1(this)
+//                    cameraSource?.position = Plank1(this)
+                    cameraSource?.training = Plank(this)
                 }
             }
             if(it == "スクワット"){
                 speak("立ち位置確認")
                 if(cameraSource != null){
-                    cameraSource?.position = Squat1(this)
+//                    cameraSource?.position = Squat1(this)
+                    cameraSource?.training = Squat(this)
                 }
             }
 //            if(it == "プランク開始"){

@@ -4,10 +4,11 @@ import android.content.Context
 import org.tensorflow.lite.examples.poseestimation.MainActivity
 import org.tensorflow.lite.examples.poseestimation.camera.CameraSource
 import org.tensorflow.lite.examples.poseestimation.data.Person
+import org.tensorflow.lite.examples.poseestimation.position.Plank1
 import kotlin.math.abs
 import kotlin.math.acos
 
-class Plank(context: MainActivity): KeepTraining("Plank", context) {
+class Plank(context: MainActivity): KeepTraining("Plank", Plank1(context), context) {
 
     private var count: Int = 0
     private var count1: Int = 0

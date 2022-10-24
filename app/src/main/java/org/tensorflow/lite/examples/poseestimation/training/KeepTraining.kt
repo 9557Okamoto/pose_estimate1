@@ -3,10 +3,12 @@ package org.tensorflow.lite.examples.poseestimation.training
 import android.content.Context
 import org.tensorflow.lite.examples.poseestimation.camera.CameraSource
 import org.tensorflow.lite.examples.poseestimation.data.Person
+import org.tensorflow.lite.examples.poseestimation.position.Position
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-abstract class KeepTraining(name: String, context: Context) : Training(name, context) {
+abstract class KeepTraining(name: String, position: Position, context: Context) :
+    Training(name, position, context) {
 
     private var start: LocalDateTime? = null
     private var now: LocalDateTime? = null
@@ -14,45 +16,43 @@ abstract class KeepTraining(name: String, context: Context) : Training(name, con
     private var time: Int = 0
     private var countattention: Int = 0
 
-    override fun addPerson(person: Person) {
-        if(personList.isNotEmpty()) {
-            val lieattention: String = LieAttention(person)
-            if(lieattention!=message2){
-                speak(lieattention)
-                countattention++
-                return
-            }
-            val waistattention: String = WaistAttention(person)
-            if(waistattention!=message2){
-                speak(waistattention)
-                count -= 2
-                countattention++
-                return
-            }
-            val elbowattention: String = ElbowAttention(person)
-            if(elbowattention!=message2){
-                speak(elbowattention)
-                countattention++
-                return
-            }
+    override fun training(person: Person) {
+        val lieattention: String = LieAttention(person)
+        if (lieattention != message2) {
+            speak(lieattention)
+            countattention++
+            return
+        }
+        val waistattention: String = WaistAttention(person)
+        if (waistattention != message2) {
+            speak(waistattention)
+            count -= 2
+            countattention++
+            return
+        }
+        val elbowattention: String = ElbowAttention(person)
+        if (elbowattention != message2) {
+            speak(elbowattention)
+            countattention++
+            return
+        }
 
-            if(Waist(person) && Elbow(person) && Shoulder(person) && Lie(person) && start==null){
-                start = LocalDateTime.now()
-            }
+        if (Waist(person) && Elbow(person) && Shoulder(person) && Lie(person) && start == null) {
+            start = LocalDateTime.now()
+        }
 
-            if(Waist(person) && Elbow(person) && Shoulder(person) && Lie(person) && start!=null) {
-                now = LocalDateTime.now()
-                time = ((now?.toEpochSecond(ZoneOffset.ofHours(+9)) ?: 0) - (start?.toEpochSecond(
-                    ZoneOffset.ofHours(+9)
-                ) ?: 0)).toInt()
+        if (Waist(person) && Elbow(person) && Shoulder(person) && Lie(person) && start != null) {
+            now = LocalDateTime.now()
+            time = ((now?.toEpochSecond(ZoneOffset.ofHours(+9)) ?: 0) - (start?.toEpochSecond(
+                ZoneOffset.ofHours(+9)
+            ) ?: 0)).toInt()
 
-                if (time >= 1) {
-                    count++
-                    time = 0
-                    start = null
-                    if (count % 10 == 0) {
-                        speak(getResult())
-                    }
+            if (time >= 1) {
+                count++
+                time = 0
+                start = null
+                if (count % 10 == 0) {
+                    speak(getResult())
                 }
             }
         }
@@ -85,8 +85,6 @@ abstract class KeepTraining(name: String, context: Context) : Training(name, con
 //                }
 //            }
 
-        personList = personList.plus(person)
-
     }
 
     override fun getResult(): String {
@@ -94,10 +92,10 @@ abstract class KeepTraining(name: String, context: Context) : Training(name, con
     }
 
     override fun getKcal(): String {
-        return "消費カロリー：${count.toFloat()/10.0f}カロリー"
+        return "消費カロリー：${count.toFloat() / 10.0f}カロリー"
     }
 
-    override fun getAttentionCount(): String{
+    override fun getAttentionCount(): String {
         return "注意回数：${countattention}回"
     }
 

@@ -5,9 +5,6 @@ import org.tensorflow.lite.examples.poseestimation.data.Person
 
 abstract class PlankPosition(name: String,context: Context) : Position(name, context) {
 
-    var count: Int = 0
-    var message: String = ""
-
     override fun addPerson(person: Person) {
         if(personList.isNotEmpty()) {
             if(FullBody(person)&&Lie(person)&&Angle(person)){
@@ -29,6 +26,8 @@ abstract class PlankPosition(name: String,context: Context) : Position(name, con
     override fun getResult(): String {
         return message
     }
+
+
 
     protected abstract fun FullBody(person: Person): Boolean
     protected abstract fun Lie(person: Person): Boolean

@@ -9,6 +9,10 @@ abstract class Position(val name: String, val context: Context): TextToSpeech.On
     var personList : List<Person> = mutableListOf()
     private var tts: TextToSpeech? = null
 
+//    Positionとして必要なら親クラスで持つ
+    var count: Int = 0
+    var message: String = ""
+
     abstract fun getResult(): String
 
     init {

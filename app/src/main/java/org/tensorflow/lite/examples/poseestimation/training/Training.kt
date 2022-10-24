@@ -4,12 +4,17 @@ import android.content.Context
 import android.os.Bundle
 import org.tensorflow.lite.examples.poseestimation.data.Person
 import android.speech.tts.TextToSpeech
+import org.tensorflow.lite.examples.poseestimation.position.Position
 import java.util.*
 
-abstract class Training(val name: String, val context: Context): TextToSpeech.OnInitListener {
+abstract class Training(val name: String, val position: Position, val context: Context): TextToSpeech.OnInitListener {
 
     var personList : List<Person> = mutableListOf()
     private var tts: TextToSpeech? = null
+
+    // 人の位置は大丈夫か
+    private var isPositioned : Boolean = false
+
     var message1 : String = ""
     var message2 : String = "その調子です"
     var message3 : String = "膝をもっと曲げてください"
@@ -32,7 +37,25 @@ abstract class Training(val name: String, val context: Context): TextToSpeech.On
     }
 
     // 骨格情報を入力
-    abstract fun addPerson(person: Person)
+    // 全てのトレーニングに行う処理をまとめ、処理するかをTrainingクラスで決める
+    // （親クラスで子クラスの処理を止めるのは面倒なため）
+    fun addPerson(person: Person){
+
+        if(!isPositioned){
+            position.addPerson(person)
+            isPositioned = position.message != ""
+            if(!isPositioned){
+                return
+            }
+        }
+
+        if(personList.isNotEmpty()) {
+            training(person)
+        }
+        personList = personList.plus(person)
+    }
+
+    abstract fun training(person: Person)
 
     // 注意
 //    protected abstract fun attention(person: Person): String

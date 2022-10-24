@@ -286,10 +286,11 @@ class CameraSource(
 //        listener?.yValue(persons[0].keyPoints[0].coordinate.y)
 //        listener?.nameValue(persons[0].keyPoints[0].bodyPart)
 
-        if(position != null){
-            position!!.addPerson(persons[0])
-            message = position!!.getResult()
-        }
+        // 立ち位置からトレーニングを決める場合、また言って
+//        if(position != null){
+//            position!!.addPerson(persons[0])
+//            message = position!!.getResult()
+//        }
 
         if(training != null){
             training!!.addPerson(persons[0])

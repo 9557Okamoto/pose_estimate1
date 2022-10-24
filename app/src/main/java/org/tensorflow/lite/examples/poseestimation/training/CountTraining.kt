@@ -2,15 +2,16 @@ package org.tensorflow.lite.examples.poseestimation.training
 
 import android.content.Context
 import org.tensorflow.lite.examples.poseestimation.data.Person
+import org.tensorflow.lite.examples.poseestimation.position.Position
 
-abstract class CountTraining(name: String, context: Context) : Training(name, context) {
+abstract class CountTraining(name: String, position: Position, context: Context) :
+    Training(name, position, context) {
 
     private var count: Int = 0
     private var countattention: Int = 0
     private var counting: Boolean = false
 
-    override fun addPerson(person: Person) {
-        if(personList.isNotEmpty()){
+    override fun training(person: Person) {
 
 //            println("nose:${person.keyPoints[0].score}")
 //            println("eye_l:${person.keyPoints[1].score}")
@@ -25,24 +26,22 @@ abstract class CountTraining(name: String, context: Context) : Training(name, co
 //            println("ankle_l:${person.keyPoints[15].score}")
 //            println("ankle_r:${person.keyPoints[16].score}")
 
-            var attention: String = attention(person)
+        var attention: String = attention(person)
 
-            if(attention != message1){
-                speak(attention)
-                countattention++
-                personList = personList.plus(person)
-                return
-            }
-
-            if(isCount(person) && !counting){
-                count++
-                counting = true
-            }else if(isCountRelease(person) && counting){
-                speak(getResult())
-                counting = false
-            }
+        if (attention != message1) {
+            speak(attention)
+            countattention++
+            personList = personList.plus(person)
+            return
         }
-        personList = personList.plus(person)
+
+        if (isCount(person) && !counting) {
+            count++
+            counting = true
+        } else if (isCountRelease(person) && counting) {
+            speak(getResult())
+            counting = false
+        }
     }
 
     override fun getResult(): String {
@@ -53,9 +52,10 @@ abstract class CountTraining(name: String, context: Context) : Training(name, co
         return "消費カロリー：${0.4f * count}カロリー"
     }
 
-    override fun getAttentionCount(): String{
+    override fun getAttentionCount(): String {
         return "注意回数：${countattention}回"
     }
+
     protected abstract fun attention(person: Person): String
 
     protected abstract fun isCount(person: Person): Boolean
